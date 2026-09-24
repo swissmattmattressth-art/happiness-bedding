@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Happiness Bedding</title>
+    <script>
+        // Check for Authentication before showing the page
+        if (sessionStorage.getItem('hp_admin_auth') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary: #FF8E26;
+            --secondary: #1a1a1a;
+            --bg: #f4f6f8;
+            --card: #ffffff;
+            --text: #333;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'Anuphan', sans-serif;
+            margin: 0;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--secondary);
+            color: white;
+            min-height: 100vh;
+            padding: 2rem;
+            position: fixed;
+        }
+
+        .sidebar h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-menu li {
+            margin-bottom: 1rem;
+        }
+
+        .nav-menu a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .nav-menu a:hover, .nav-menu a.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 3rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .btn-add {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* Tables */
+        .data-card {
+            background: var(--card);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+            color: #666;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+
+        .admin-thumb {
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-edit { color: #3498db; cursor: pointer; }
+        .btn-delete { color: #e74c3c; cursor: pointer; }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            width: 600px;
+            margin: 5% auto;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 { margin: 0; color: var(--secondary); }
+        .close-modal { cursor: pointer; font-size: 1.5rem; }
+
+        .modal-body { padding: 2rem; }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .full-width { grid-column: span 2; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+
+        .price-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+            text-align: right;
+        }
+
+        .btn-save { background: var(--primary); color: white; border: none; padding: 0.8rem 2rem; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        .btn-cancel { background: #ccc; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 6px; cursor: pointer; margin-right: 1rem; }
+
+        .image-input-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .btn-upload {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>HP Admin</h2>
+        <ul class="nav-menu">
+            <li><a href="#" id="tab-products" class="active" onclick="switchTab('products')"><i class="fas fa-bed"></i> สินค้า</a></li>
+            <li><a href="#" id="tab-reviews" onclick="switchTab('reviews')"><i class="fas fa-star"></i> รีวิวลูกค้า</a></li>
+            <li><a href="#" id="tab-settings" onclick="switchTab('settings')"><i class="fas fa-cog"></i> ตั้งค่าเว็บไซต์</a></li>
+            <li style="margin-top: 5rem;"><a href="index.html"><i class="fas fa-external-link-alt"></i> ไปหน้าเว็บ</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <!-- Products Tab -->
+        <div id="content-products" class="tab-content">
+            <div class="header">
+                <h1>จัดการสินค้า</h1>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn-add" onclick="openModal('mattress')"><i class="fas fa-plus"></i> เพิ่มที่นอน</button>
+                    <button class="btn-add" onclick="openModal('bed')"><i class="fas fa-plus"></i> เพิ่มเตียง</button>
+                    <button class="btn-add" onclick="openModal('sofa')"><i class="fas fa-plus"></i> เพิ่มโซฟา</button>
+                </div>
+            </div>
+
+            <div class="data-card">
+                <h3>ที่นอนเพื่อสุขภาพ (Mattresses)</h3>
+                <table>
+                    <thead>
+                        <tr><th>รูป</th><th>รุ่น</th><th>ความหนา</th><th>ราคา (3.5/5/6)</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody id="productBodyMattress"></tbody>
+                </table>
+            </div>
+
+            <div class="data-card">
+                <h3>เตียงดีไซน์ (Design Beds)</h3>
+                <table>
+                    <thead>
+                        <tr><th>รูป</th><th>รุ่น</th><th>ราคา (3.5/5/6)</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody id="productBodyBed"></tbody>
+                </table>
+            </div>
+
+            <div class="data-card">
+                <h3>โซฟา (Sofas)</h3>
+                <table>
+                    <thead>
+                        <tr><th>รูป</th><th>รุ่น</th><th>ราคาเดียว</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody id="productBodySofa"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Reviews Tab -->
+        <div id="content-reviews" class="tab-content" style="display: none;">
+            <div class="header">
+                <h1>รีวิวลูกค้า</h1>
+                <button class="btn-add" onclick="openReviewModal()"><i class="fas fa-plus"></i> เพิ่มรีวิว</button>
+            </div>
+            <div class="data-card">
+                <table>
+                    <thead><tr><th>ชื่อลูกค้า</th><th>คะแนน</th><th>Actions</th></tr></thead>
+                    <tbody id="reviewBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="content-settings" class="tab-content" style="display: none;">
+            <div class="header">
+                <h1>ตั้งค่าเว็บไซต์</h1>
+            </div>
+            <div class="data-card" style="max-width: 800px;">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>ปุ่ม "ปรึกษาผู้เชี่ยวชาญ" (Link)</label>
+                        <input type="text" id="setConsult" placeholder="เช่น https://line.me/...">
+                        <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">* ลิ้งค์สำหรับปุ่มในหน้าแรก</p>
+                    </div>
+                    <div class="form-group">
+                        <label>เบอร์โทรศัพท์ติดต่อ</label>
+                        <input type="text" id="setPhone" placeholder="064-990-8338">
+                    </div>
+                    <div class="form-group">
+                        <label>Facebook URL</label>
+                        <input type="text" id="setFB">
+                    </div>
+                    <div class="form-group">
+                        <label>LINE OA URL</label>
+                        <input type="text" id="setLine">
+                    </div>
+                    <div class="form-group">
+                        <label>Hero Image URL</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="setHero" style="flex: 1;">
+                            <button class="btn-upload" onclick="document.getElementById('uploadHero').click()" style="white-space: nowrap;">
+                                <i class="fas fa-upload"></i> อัปโหลด
+                            </button>
+                            <input type="file" id="uploadHero" style="display: none;" accept="image/*" onchange="handleImageUpload(this, 'setHero')">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>รูปหน้าเกี่ยวกับเรา 1 (About Image 1)</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="setAbout1" style="flex: 1;">
+                            <button class="btn-upload" onclick="document.getElementById('uploadAbout1').click()" style="white-space: nowrap;">
+                                <i class="fas fa-upload"></i> อัปโหลด
+                            </button>
+                            <input type="file" id="uploadAbout1" style="display: none;" accept="image/*" onchange="handleImageUpload(this, 'setAbout1')">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>รูปหน้าเกี่ยวกับเรา 2 (About Image 2)</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="setAbout2" style="flex: 1;">
+                            <button class="btn-upload" onclick="document.getElementById('uploadAbout2').click()" style="white-space: nowrap;">
+                                <i class="fas fa-upload"></i> อัปโหลด
+                            </button>
+                            <input type="file" id="uploadAbout2" style="display: none;" accept="image/*" onchange="handleImageUpload(this, 'setAbout2')">
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #eee;">
+                        <h3>📸 คลังภาพจากทางบ้าน (Real Life Gallery)</h3>
+                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">ภาพบรรยากาศจริงจากการจัดส่ง (แสดงในหน้ารีวิว)</p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div class="form-group">
+                                <label>ภาพที่ 1</label>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <input type="text" id="setGallery1" style="flex: 1;">
+                                    <button class="btn-upload" onclick="document.getElementById('upGal1').click()"><i class="fas fa-upload"></i></button>
+                                    <input type="file" id="upGal1" style="display: none;" accept="image/*" onchange="handleImageUpload(this, 'setGallery1')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>ภาพที่ 2</label>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <input type="text" id="setGallery2" style="flex: 1;">
+                                    <button class="btn-upload" onclick="document.getElementById('upGal2').click()"><i class="fas fa-upload"></i></button>
+                                    <input type="file" id="upGal2" style="display: none;" accept="image/*" onchange="handleImageUpload(this, 'setGallery2')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>ภาพที่ 3</label>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <input type="text" id="setGallery3" style="flex: 1;">
+                                    <button class="btn-upload" onclick="document.getElementById('upGal3').click()"><i class="fas fa-upload"></i></button>
+                                    <input type="file" id="upGal3" style="display: none;" accept="image/*" onchange="handleImageUpload(this, 'setGallery3')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>ภาพที่ 4</label>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <input type="text" id="setGallery4" style="flex: 1;">
+                                    <button class="btn-upload" onclick="document.getElementById('upGal4').click()"><i class="fas fa-upload"></i></button>
+                                    <input type="file" id="upGal4" style="display: none;" accept="image/*" onchange="handleImageUpload(this, 'setGallery4')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>ภาพที่ 5</label>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <input type="text" id="setGallery5" style="flex: 1;">
+                                    <button class="btn-upload" onclick="document.getElementById('upGal5').click()"><i class="fas fa-upload"></i></button>
+                                    <input type="file" id="upGal5" style="display: none;" accept="image/*" onchange="handleImageUpload(this, 'setGallery5')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>ภาพที่ 6</label>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <input type="text" id="setGallery6" style="flex: 1;">
+                                    <button class="btn-upload" onclick="document.getElementById('upGal6').click()"><i class="fas fa-upload"></i></button>
+                                    <input type="file" id="upGal6" style="display: none;" accept="image/*" onchange="handleImageUpload(this, 'setGallery6')">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #eee;">
+                    <h3>📈 การตลาดและการติดตาม (Tracking)</h3>
+                    <div class="form-group full-width">
+                        <label>Facebook Pixel / Google Analytics Code</label>
+                        <textarea id="setTracking" rows="5" placeholder="วางโค้ดสคริปต์ที่นี่..."></textarea>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #eee;">
+                    <h3>💾 สำรองและกู้คืนข้อมูล (Backup & Recovery)</h3>
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">แนะนำให้สำรองข้อมูลเป็นประจำ เพื่อป้องกันข้อมูลสินค้าและรีวิวหาย</p>
+                    <div style="display: flex; gap: 1rem;">
+                        <button onclick="exportData()" class="btn-upload" style="background: #2ecc71; color: white; border: none; padding: 0.8rem 1.5rem;">
+                            <i class="fas fa-file-export"></i> ส่งออกข้อมูล (Export JSON)
+                        </button>
+                        <button onclick="document.getElementById('importFile').click()" class="btn-upload" style="background: #3498db; color: white; border: none; padding: 0.8rem 1.5rem;">
+                            <i class="fas fa-file-import"></i> นำเข้าข้อมูล (Import JSON)
+                        </button>
+                        <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(this)">
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem; text-align: right;">
+                    <button onclick="saveGeneralSettings()" class="btn-save">บันทึกการตั้งค่าทั้งหมด</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Customer Review</h3>
+                <span class="close-modal" onclick="closeReviewModal()">&times;</span>
+            </div>
+            <form id="reviewForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Customer Name</label>
+                        <input type="text" id="rName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Location (Province)</label>
+                        <input type="text" id="rLocation">
+                    </div>
+                    <div class="form-group">
+                        <label>Rating (1-5)</label>
+                        <input type="number" id="rRating" min="1" max="5" value="5">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Comment</label>
+                        <textarea id="rComment" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="closeReviewModal()" class="btn-cancel">Cancel</button>
+                    <button type="submit" class="btn-save">Save Review</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content" style="width: 700px;">
+            <div class="modal-header">
+                <h3 id="modalTitle">Edit Product</h3>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="productForm">
+                <input type="hidden" id="productId">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Product Name (English)</label>
+                            <input type="text" id="pName" placeholder="e.g. Jasmine Premium" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Model Name (Thai)</label>
+                            <input type="text" id="pModel" placeholder="e.g. รุ่นมะลิ" required>
+                        </div>
+                        <div class="form-group" id="thicknessGroup">
+                            <label>Thickness (Inches)</label>
+                            <input type="number" id="pThickness" placeholder="e.g. 10">
+                        </div>
+                        <div class="form-group">
+                            <label>Category (หมวดหมู่สินค้า)</label>
+                            <select id="pCategory" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 6px;">
+                                <option value="mattress">ที่นอนเพื่อสุขภาพ (Mattress)</option>
+                                <option value="bed">เตียงดีไซน์ (Design Bed)</option>
+                                <option value="sofa">โซฟา (Sofa)</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Image URL</label>
+                            <div class="image-input-group">
+                                <input type="text" id="pImage" placeholder="URL or filename">
+                                <button type="button" class="btn-upload" onclick="document.getElementById('imageFile').click()">
+                                    <i class="fas fa-upload"></i> Upload
+                                </button>
+                                <input type="file" id="imageFile" style="display:none" accept="image/*" onchange="handleImageUpload(this, 'pImage')">
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Description</label>
+                            <textarea id="pDesc" rows="3" placeholder="Describe the product features..."></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>ป้ายกำกับ (เช่น Best Seller, Recommend)</label>
+                            <input type="text" id="pBadge" placeholder="ทิ้งว่างไว้ถ้าไม่มี">
+                        </div>
+                        <div class="form-group full-width" id="priceMultiGroup">
+                            <label>Prices (3.5' / 5' / 6')</label>
+                            <div class="price-grid">
+                                <input type="text" id="pPrice35" placeholder="3.5 ft price">
+                                <input type="text" id="pPrice5" placeholder="5 ft price">
+                                <input type="text" id="pPrice6" placeholder="6 ft price">
+                            </div>
+                        </div>
+                        <div class="form-group full-width" id="priceSingleGroup" style="display:none">
+                            <label>Price (ราคาเดียวสำหรับโซฟา)</label>
+                            <input type="text" id="pPriceSingle" placeholder="e.g. 8,900.-">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="closeModal()" class="btn-cancel">Cancel</button>
+                    <button type="submit" class="btn-save">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+    <script>
+        // Modal Control
+        function openModal(data) {
+            const modal = document.getElementById('productModal');
+            const thicknessGroup = document.getElementById('thicknessGroup');
+            modal.style.display = 'block';
+            
+            const catNames = { mattress: 'ที่นอน', bed: 'เตียงดีไซน์', sofa: 'โซฟา' };
+            
+            if (typeof data === 'string') {
+                document.getElementById('modalTitle').innerText = 'เพิ่มข้อมูล: ' + (catNames[data] || 'สินค้า');
+                document.getElementById('productForm').reset();
+                document.getElementById('productId').value = '';
+                document.getElementById('pCategory').value = data;
+                thicknessGroup.style.display = (data === 'mattress') ? 'block' : 'none';
+                
+                const pMulti = document.getElementById('priceMultiGroup');
+                const pSingle = document.getElementById('priceSingleGroup');
+                const isSofa = (data === 'sofa');
+                pMulti.style.display = isSofa ? 'none' : 'block';
+                pSingle.style.display = isSofa ? 'block' : 'none';
+            } else {
+                const category = data.category || 'mattress';
+                document.getElementById('modalTitle').innerText = 'แก้ไขข้อมูล: ' + (catNames[category] || 'สินค้า');
+                document.getElementById('productId').value = data.id;
+                document.getElementById('pName').value = data.name;
+                document.getElementById('pModel').value = data.model_name;
+                document.getElementById('pThickness').value = data.thickness || '';
+                document.getElementById('pImage').value = data.image_url;
+                document.getElementById('pDesc').value = data.description || '';
+                document.getElementById('pBadge').value = data.badge || '';
+                document.getElementById('pCategory').value = category;
+                
+                thicknessGroup.style.display = (category === 'mattress') ? 'block' : 'none';
+                
+                const pMulti = document.getElementById('priceMultiGroup');
+                const pSingle = document.getElementById('priceSingleGroup');
+                const isSofa = (category === 'sofa');
+                pMulti.style.display = isSofa ? 'none' : 'block';
+                pSingle.style.display = isSofa ? 'block' : 'none';
+                
+                if (isSofa) {
+                    document.getElementById('pPriceSingle').value = data.price_3_5 || '';
+                } else {
+                    document.getElementById('pPrice35').value = data.price_3_5;
+                    document.getElementById('pPrice5').value = data.price_5;
+                    document.getElementById('pPrice6').value = data.price_6;
+                }
+            }
+        }
+
+        function closeModal() { document.getElementById('productModal').style.display = 'none'; }
+        function openReviewModal() { document.getElementById('reviewModal').style.display = 'block'; }
+        function closeReviewModal() { document.getElementById('reviewModal').style.display = 'none'; }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+            document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
+            
+            document.getElementById('content-' + tab).style.display = 'block';
+            document.getElementById('tab-' + tab).classList.add('active');
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('productModal')) closeModal();
+            if (event.target == document.getElementById('reviewModal')) closeReviewModal();
+        }
+
+        // Export functions to global scope for app.js callbacks
+        window.openModal = openModal;
+    </script>
+</body>
+</html>

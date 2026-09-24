@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เกี่ยวกับเรา | Happiness Bedding โดยซ้อเป้</title>
+    <link rel="stylesheet" href="styles.css?v=2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Happiness Bedding Logo" class="brand-logo-img">
+            </a>
+            <div class="mobile-menu-btn"><i class="fas fa-bars"></i></div>
+            <ul class="nav-links">
+                <li><a href="index.html">หน้าแรก</a></li>
+                <li><a href="index.html#products">สินค้า</a></li>
+                <li><a href="reviews.html">รีวิวลูกค้า</a></li>
+                <li><a href="about.html" class="active">เกี่ยวกับเรา</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="about-hero" style="padding: 12rem 0 6rem; background: #fff; text-align: center;">
+        <div class="container">
+            <span class="owner-title reveal" style="color: var(--primary-red); font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Know Our Story</span>
+            <h1 class="reveal" style="font-size: 4rem; font-weight: 800; margin-top: 1rem;">เบื้องหลังความสุข <span style="color: var(--primary-orange);">แห่งการพักผ่อน</span></h1>
+        </div>
+    </section>
+
+    <section id="about" class="about" style="padding: 4rem 0 10rem;">
+        <div class="container">
+            <div class="about-grid" style="display: flex; align-items: center; gap: 6rem; flex-wrap: wrap;">
+                <div class="about-image reveal-left" style="flex: 1; min-width: 350px; position: relative;">
+                    <img id="dynamic-about-1" src="luxury_mattress_hero_1778572561869.png" alt="ซ้อเป้ Happiness Bedding" style="width: 100%; border-radius: 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.15);">
+                    <div class="experience-badge" style="position: absolute; bottom: -30px; right: -20px; background: var(--primary-red); color: white; padding: 2rem; border-radius: 20px; box-shadow: 0 15px 30px rgba(146, 39, 36, 0.3); text-align: center;">
+                        <span style="display: block; font-size: 2.5rem; font-weight: 800; line-height: 1;">20+</span>
+                        <span style="font-size: 0.9rem; font-weight: 600;">ปีแห่งประสบการณ์</span>
+                    </div>
+                </div>
+                <div class="about-content reveal-right" style="flex: 1.2; min-width: 350px;">
+                    <h2 style="font-size: 3rem; font-weight: 800; line-height: 1.2; margin-bottom: 2rem; color: #555555;">เรื่องราวจาก <br><span style="color: var(--primary-orange); font-size: 4.5rem;">"ซ้อเป้"</span></h2>
+                    <div class="about-text" style="font-size: 1.15rem; line-height: 1.8; color: var(--text-gray);">
+                        <p style="margin-bottom: 1.5rem;">จากประสบการณ์การบริหารโรงงานผลิตที่นอนมากว่า 20 ปี ซ้อเห็นปัญหาซ้ำๆ ของลูกค้าคือ <strong>"ซื้อที่นอนราคาแพงแต่กลับยังปวดหลัง"</strong> นั่นคือจุดเริ่มต้นของ Happiness Bedding ที่ซ้อตั้งใจสร้างขึ้นมา</p>
+                        <p style="margin-bottom: 1.5rem;">เราไม่ได้ขายแค่ที่นอน แต่ซ้อตั้งใจช่วยให้คุณมีคุณภาพชีวิตที่ดีขึ้น ลดปัญหาปวดหลัง ปวดเอว ที่กวนใจมานาน โดยเฉพาะพี่ๆ เพื่อนๆ ในวัย 30-60 ปี ที่ต้องการการพักผ่อนที่มีคุณภาพจริงๆ</p>
+                        <div style="border-left: 5px solid var(--primary-red); padding-left: 2rem; margin: 3rem 0; font-style: italic; color: var(--primary-black); font-size: 1.3rem;">
+                            "เพราะการลงทุนกับการนอน คือการลงทุนเพื่อสุขภาพที่คุ้มค่าที่สุด ซ้อดูแลทุกขั้นตอนเหมือนทำให้คนในครอบครัวใช้เอง ในราคาที่ทุกคนเข้าถึงได้จากโรงงานโดยตรงค่ะ"
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; margin-top: 8rem;">
+                <div class="feature-box reveal" style="background: white; padding: 3rem; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); text-align: center; border: 1px solid rgba(0,0,0,0.02);">
+                    <i class="fas fa-factory" style="font-size: 3rem; color: var(--primary-red); margin-bottom: 1.5rem;"></i>
+                    <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">มีโรงงานผลิตเอง</h4>
+                    <p>ควบคุมคุณภาพได้ทุกขั้นตอน ประสบการณ์ยาวนานกว่า 20 ปี</p>
+                </div>
+                <div class="feature-box reveal" style="background: white; padding: 3rem; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); text-align: center; border: 1px solid rgba(0,0,0,0.02);">
+                    <i class="fas fa-user-md" style="font-size: 3rem; color: var(--primary-red); margin-bottom: 1.5rem;"></i>
+                    <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">ออกแบบตามสรีระ</h4>
+                    <p>เน้นแก้ปัญหาปวดหลัง ไม่ใช่แค่ความนุ่ม แต่ต้องรองรับได้จริง</p>
+                </div>
+                <div class="feature-box reveal" style="background: white; padding: 3rem; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); text-align: center; border: 1px solid rgba(0,0,0,0.02);">
+                    <i class="fas fa-award" style="font-size: 3rem; color: var(--primary-red); margin-bottom: 1.5rem;"></i>
+                    <h4 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">วัสดุเกรดพรีเมียม</h4>
+                    <p>คัดสรรวัสดุที่ดีที่สุด ในราคาที่ยุติธรรมส่งตรงจากผู้ผลิต</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <img src="logo.png" alt="Happiness Bedding Logo" style="height: 40px; filter: brightness(0) invert(1);">
+                    </div>
+                    <p>ลงทุนกับการนอน คือการลงทุนเพื่อสุขภาพ</p>
+                </div>
+                <div class="footer-info">
+                    <h4>Contact Us</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> 33/37 หมู่ 4 ต. โคกช้าง อ.บางไทร จ.พระนครศรีอยุธยา</p>
+                    <p><i class="fas fa-phone"></i> 064-990-8338, 094-826-3597</p>
+                    <p><i class="fas fa-envelope"></i> happinessbedding.l@gmail.com</p>
+                </div>
+                <div class="qr-code-section">
+                    <div class="qr-placeholder">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://line.me/ti/p/~@happinessbedding" alt="Line QR" style="width: 100%;">
+                    </div>
+                    <div>
+                        <p class="qr-text-primary">รับสิทธิพิเศษมากมาย</p>
+                        <p class="qr-text-secondary"><i class="fab fa-line"></i> ผ่าน LINE OA</p>
+                        <p class="qr-text-brand">@happinessbedding</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Happiness Bedding. All Rights Reserved. | Invest in your sleep, Invest in your health</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Contact Bar -->
+    <div class="floating-contact-bar">
+        <a href="https://line.me/R/oaMessage/@happinessbedding/" class="float-item float-line" target="_blank"><i class="fab fa-line"></i></a>
+        <a href="https://facebook.com/happinessbedding.l" class="float-item float-fb" target="_blank"><i class="fab fa-facebook-f"></i></a>
+        <a href="tel:0649908338" class="float-item float-phone"><i class="fas fa-phone"></i></a>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รีวิวจากลูกค้าจริง | Happiness Bedding</title>
+    <link rel="stylesheet" href="styles.css?v=2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Happiness Bedding Logo" class="brand-logo-img">
+            </a>
+            <div class="mobile-menu-btn"><i class="fas fa-bars"></i></div>
+            <ul class="nav-links">
+                <li><a href="index.html">หน้าแรก</a></li>
+                <li><a href="index.html#products">สินค้า</a></li>
+                <li><a href="reviews.html" class="active">รีวิวลูกค้า</a></li>
+                <li><a href="about.html">เกี่ยวกับเรา</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Review Dashboard -->
+    <section class="review-dashboard" style="padding-top: 12rem;">
+        <div class="container">
+            <div class="dashboard-card reveal">
+                <div class="dashboard-main">
+                    <div class="avg-score">4.9</div>
+                    <div class="score-info">
+                        <div class="stars-large">⭐⭐⭐⭐⭐</div>
+                        <p>คะแนนเฉลี่ยจากลูกค้า 500+ ท่าน</p>
+                    </div>
+                </div>
+                <div class="dashboard-stats">
+                    <div class="stat-item">
+                        <span class="stat-num">98%</span>
+                        <span class="stat-label">ลูกค้าพึงพอใจมาก</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num">100%</span>
+                        <span class="stat-label">ส่งสินค้าตรงปก</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num">15+</span>
+                        <span class="stat-label">ปีที่ดูแลคนไทย</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo Gallery Section -->
+    <section class="customer-gallery" style="padding: 6rem 0;">
+        <div class="container">
+            <div class="section-title reveal">
+                <h2>📸 ภาพจริงจากบ้านลูกค้า</h2>
+                <p>ยืนยันความพึงพอใจด้วยภาพบรรยากาศจริงจากการจัดส่งทั่วประเทศ</p>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item reveal"><img id="gallery-img-1" src="https://placehold.co/400x500?text=Customer+Photo+1" alt="Review"></div>
+                <div class="gallery-item reveal" style="transition-delay: 0.1s;"><img id="gallery-img-2" src="https://placehold.co/400x500?text=Customer+Photo+2" alt="Review"></div>
+                <div class="gallery-item reveal" style="transition-delay: 0.2s;"><img id="gallery-img-3" src="https://placehold.co/400x500?text=Customer+Photo+3" alt="Review"></div>
+                <div class="gallery-item reveal" style="transition-delay: 0.3s;"><img id="gallery-img-4" src="https://placehold.co/400x500?text=Customer+Photo+4" alt="Review"></div>
+                <div class="gallery-item reveal" style="transition-delay: 0.4s;"><img id="gallery-img-5" src="https://placehold.co/400x500?text=Customer+Photo+5" alt="Review"></div>
+                <div class="gallery-item reveal" style="transition-delay: 0.5s;"><img id="gallery-img-6" src="https://placehold.co/400x500?text=Customer+Photo+6" alt="Review"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reviews" class="reviews-page" style="padding: 4rem 0 8rem;">
+        <div class="container">
+            <div class="section-title reveal">
+                <h2 style="font-size: 3rem; font-weight: 800; margin-bottom: 1rem; color: #555555;">เสียงตอบรับจาก <span style="color: var(--primary-orange);">ลูกค้าตัวจริง</span></h2>
+                <p>ความประทับใจที่คุณวางใจได้ Happiness Bedding ดูแลการนอนของคนไทยมากว่า 20 ปี</p>
+            </div>
+            
+            <div id="review-grid-dynamic" class="product-grid" style="margin-top: 4rem;">
+                <!-- Loaded via JS -->
+            </div>
+
+            <!-- Review CTA -->
+            <div class="review-cta reveal" style="margin-top: 8rem; text-align: center; padding: 5rem 2rem; background: var(--bg-cream); border-radius: 40px; box-shadow: 0 30px 60px rgba(0,0,0,0.05);">
+                <h3 style="font-size: 2.5rem; margin-bottom: 1.5rem;">ใช้แล้วประทับใจ อยากบอกต่อ?</h3>
+                <p style="margin-bottom: 3rem; font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin-left: auto; margin-right: auto;">ร่วมเป็นส่วนหนึ่งของครอบครัว Happiness Bedding ส่งต่อความสุขของการนอนให้คนไทย พร้อมรับสิทธิพิเศษมากมาย</p>
+                <a href="https://line.me/R/oaMessage/@happinessbedding/?สนใจส่งรีวิว" class="btn-primary" style="display: inline-flex; align-items: center; gap: 1.2rem; padding: 1.5rem 3.5rem; font-size: 1.2rem;">
+                    <i class="fab fa-line" style="font-size: 2rem;"></i> ร่วมแบ่งปันความประทับใจผ่าน LINE
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <img src="logo.png" alt="Happiness Bedding Logo" style="height: 40px; filter: brightness(0) invert(1);">
+                    </div>
+                    <p>ลงทุนกับการนอน คือการลงทุนเพื่อสุขภาพ</p>
+                </div>
+                <div class="footer-info">
+                    <h4>Contact Us</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> 33/37 หมู่ 4 ต. โคกช้าง อ.บางไทร จ.พระนครศรีอยุธยา</p>
+                    <p><i class="fas fa-phone"></i> 064-990-8338, 094-826-3597</p>
+                    <p><i class="fas fa-envelope"></i> happinessbedding.l@gmail.com</p>
+                </div>
+                <div class="qr-code-section">
+                    <div class="qr-placeholder">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://line.me/ti/p/~@happinessbedding" alt="Line QR" style="width: 100%;">
+                    </div>
+                    <div>
+                        <p class="qr-text-primary">รับสิทธิพิเศษมากมาย</p>
+                        <p class="qr-text-secondary"><i class="fab fa-line"></i> ผ่าน LINE OA</p>
+                        <p class="qr-text-brand">@happinessbedding</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Happiness Bedding. All Rights Reserved. | Invest in your sleep, Invest in your health</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Contact Bar -->
+    <div class="floating-contact-bar">
+        <a href="https://line.me/R/oaMessage/@happinessbedding/" class="float-item float-line" target="_blank"><i class="fab fa-line"></i></a>
+        <a href="https://facebook.com/happinessbedding.l" class="float-item float-fb" target="_blank"><i class="fab fa-facebook-f"></i></a>
+        <a href="tel:0649908338" class="float-item float-phone"><i class="fas fa-phone"></i></a>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
