@@ -6,8 +6,8 @@ const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE
 
 const initialProducts = [
     { id: '1', name: 'Lily', model_name: 'รุ่นมะลิ', category: 'mattress', thickness: 9, price_3_5: '7,990.-', price_5: '8,990.-', price_6: '9,990.-', image_url: 'jasmine.png', description: 'ที่นอนนุ่มสบาย ระบายอากาศดี', badge: 'Best Seller' },
-    { id: '2', name: 'Health care', model_name: 'รุ่นสุขภาพ', category: 'mattress', thickness: 10, price_3_5: '16,900.-', price_5: '17,900.-', price_6: '18,900.-', image_url: 'health_care.png', description: 'ที่นอนเสริมยางพาราแท้ ช่วยพยุงกระดูกสันหลัง', badge: 'Recommend' },
-    { id: '3', name: 'Standard Bed', model_name: 'รุ่นมาตรฐาน', category: 'bed', price_3_5: '4,500.-', price_5: '5,500.-', price_6: '6,500.-', image_url: 'bed_mock.png', description: 'เตียงดีไซน์เรียบง่าย แข็งแรงทนทาน' }
+    { id: '2', name: 'Health care', model_name: 'รุ่นสุขภาพ', category: 'mattress', thickness: 10, price_3_5: '16,900.-', price_5: '17,900.-', price_6: '18,900.-', image_url: 'healthcare.png', description: 'ที่นอนเสริมยางพาราแท้ ช่วยพยุงกระดูกสันหลัง', badge: 'Recommend' },
+    { id: '3', name: 'Standard Bed', model_name: 'รุ่นมาตรฐาน', category: 'bed', price_3_5: '4,500.-', price_5: '5,500.-', price_6: '6,500.-', image_url: 'lily_mattress.png', description: 'เตียงดีไซน์เรียบง่าย แข็งแรงทนทาน' }
 ];
 
 const initialReviews = [
