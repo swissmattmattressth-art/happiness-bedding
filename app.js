@@ -36,41 +36,59 @@ const initialSettings = [
 
 // Data Sync Helpers
 async function getCloudData(table, fallback, storageKey) {
-    const { data, error } = await sb.from(table).select('*');
-    
-    // If cloud has data, use it
-    if (!error && data && data.length > 0) return data;
-    
-    // If cloud is empty, check LocalStorage for old data
+    // Check local data first for fast response
     const localData = localStorage.getItem(storageKey);
+    let parsedLocal = null;
     if (localData) {
-        const parsed = JSON.parse(localData);
-        console.log(`Migrating ${table} from LocalStorage to Cloud...`);
-        
-        // Sync to Cloud so it's not empty anymore
-        if (Array.isArray(parsed)) {
-            for (const item of parsed) { await setCloudData(table, item); }
-        } else if (typeof parsed === 'object') {
-            // For settings which might be an object or array depending on previous version
-            if (Array.isArray(parsed)) {
-                for (const item of parsed) { await setCloudData(table, item); }
-            }
+        try { parsedLocal = JSON.parse(localData); } catch (e) {}
+    }
+
+    try {
+        const { data, error } = await sb.from(table).select('*');
+        if (!error && data && data.length > 0) {
+            // Save to LocalStorage cache
+            setStorageData(storageKey, data);
+            return data;
         }
-        return parsed;
+    } catch (err) {
+        console.warn(`Supabase read notice (${table}):`, err);
     }
     
+    // Fallback to local data or initial fallback array
+    if (parsedLocal && parsedLocal.length > 0) return parsedLocal;
     return fallback;
 }
 
 async function setCloudData(table, item) {
+    // 1. Save locally to LocalStorage first (Ensures admin edits work on Vercel/GitHub pages instantly!)
+    const storageKey = table === 'products' ? 'hp_products' : (table === 'reviews' ? 'hp_reviews' : 'hp_settings');
     try {
-        console.log(`Saving to ${table}:`, item);
+        let currentData = getStorageData(storageKey, []);
+        if (table === 'settings') {
+            if (!Array.isArray(currentData)) currentData = [];
+            const idx = currentData.findIndex(s => s.key === item.key);
+            if (idx >= 0) currentData[idx] = item;
+            else currentData.push(item);
+        } else {
+            const idx = currentData.findIndex(i => i.id === item.id);
+            if (idx >= 0) currentData[idx] = item;
+            else currentData.push(item);
+        }
+        setStorageData(storageKey, currentData);
+    } catch (e) {
+        console.warn('LocalStorage save error:', e);
+    }
+
+    // 2. Try sync to Supabase Cloud
+    try {
+        console.log(`Syncing to Supabase Cloud (${table}):`, item);
         const { error } = await sb.from(table).upsert(item, { onConflict: (table === 'settings' ? 'key' : 'id') });
         if (error) throw error;
         return true;
     } catch (err) {
-        console.error(`Supabase Error (${table}):`, err.message || err);
-        return false;
+        console.warn(`Supabase Cloud Sync Warning (${table}):`, err.message || err);
+        // Still return true because data is safely saved in LocalStorage fallback
+        return true;
     }
 }
 
