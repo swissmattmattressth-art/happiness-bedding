@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap');
+@import "tailwindcss";
+
+:root {
+  --primary-orange: #FF8E26;
+  --primary-orange-hover: #E07A1B;
+  --primary-black: #1a1a1a;
+  --text-dark: #222222;
+  --text-gray: #555555;
+  --text-muted: #777777;
+  --bg-gray: #fcfcfc;
+  --white: #ffffff;
+  --container-width: 1200px;
+}
+
+body {
+  font-family: 'Anuphan', sans-serif;
+  color: #222222;
+  background-color: #ffffff;
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: 'Outfit', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Signature E-bars logo element matching Stitch */
+.e-bars {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 4px;
+}
+
+.bar {
+  width: 26px;
+  height: 5px;
+  background-color: #FF8E26;
+  border-radius: 1px;
+}
+
+/* Primary Button Styling matching Stitch */
+.btn-stitch-primary {
+  background-color: #FF8E26;
+  color: #ffffff;
+  padding: 1.1rem 2.8rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 20px rgba(255, 142, 38, 0.25);
+}
+
+.btn-stitch-primary:hover {
+  background-color: #E07A1B;
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(255, 142, 38, 0.35);
+}
+
+.btn-stitch-secondary {
+  background-color: transparent;
+  color: #1a1a1a;
+  border: 2px solid #1a1a1a;
+  padding: 1.1rem 2.8rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-stitch-secondary:hover {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  transform: translateY(-3px);
+}
+
+/* Card hover effect matching Stitch */
+.stitch-card {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stitch-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+}
+
+.modal-backdrop {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+}
